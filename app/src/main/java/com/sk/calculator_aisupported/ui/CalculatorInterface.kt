@@ -1,5 +1,6 @@
 package com.sk.calculator_aisupported.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -32,19 +34,24 @@ import com.google.android.gms.ads.AdView
 
 @Composable
 fun BannerAdView(modifier: Modifier = Modifier) {
-    AndroidView(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-        factory = { context ->
-            AdView(context).apply {
-                setAdSize(AdSize.BANNER)
-                // Official Google AdMob Test Banner Ad Unit ID
-                adUnitId = "ca-app-pub-3940256099942544/6300978111"
-                loadAd(AdRequest.Builder().build())
+        contentAlignment = Alignment.Center
+    ) {
+        AndroidView(
+            modifier = Modifier.fillMaxWidth(),
+            factory = { context ->
+                AdView(context).apply {
+                    setAdSize(AdSize.BANNER)
+                    // Official Google AdMob Test Banner Ad Unit ID
+                    adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                    loadAd(AdRequest.Builder().build())
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -78,167 +85,179 @@ fun CalculatorInterface(viewModel: CalculatorViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .navigationBarsPadding() // Ensures bottom keypad never overlaps Android device bottom bar!
-                .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 12.dp),
+                .navigationBarsPadding(), // Ensures bottom banner sits cleanly above device navigation bar
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Header Bar with Circular Dark Containers
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Top Left: History & Settings Buttons
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Surface(
-                        onClick = { showHistorySheet = true },
-                        shape = CircleShape,
-                        color = bgSurfaceColor,
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Default.History,
-                                contentDescription = "History",
-                                tint = iconTintColor,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-
-                    Surface(
-                        onClick = { showSettingsSheet = true },
-                        shape = CircleShape,
-                        color = bgSurfaceColor,
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = "Settings",
-                                tint = iconTintColor,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-                }
-
-                // Top Right: Calculator Modes Professional Window Button
-                Surface(
-                    onClick = { showModeSheet = true },
-                    shape = CircleShape,
-                    color = bgSurfaceColor,
-                    modifier = Modifier.size(40.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Default.Calculate,
-                            contentDescription = "Calculator Modes",
-                            tint = iconTintColor,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-            }
-
-            // Display Area (Multi-line upward expansion into free space)
-            var totalDragX by remember { mutableFloatStateOf(0f) }
-
-            Box(
+            // Main Top & Middle Content (Header, Display & Keypad)
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures(
-                            onDragStart = { totalDragX = 0f },
-                            onHorizontalDrag = { change, dragAmount ->
-                                change.consume()
-                                totalDragX += dragAmount
-                            },
-                            onDragEnd = {
-                                if (totalDragX < -50f) { // Swipe Left -> Backspace
-                                    viewModel.onBackspace()
-                                } else if (totalDragX > 50f) { // Swipe Right -> Evaluate
-                                    viewModel.onEvaluate()
-                                }
-                            }
-                        )
-                    },
-                contentAlignment = Alignment.BottomEnd
+                    .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                val scrollState = rememberScrollState()
-                val formulaText = formulaState
-                val displayText = if (formulaText.isEmpty()) "0" else formulaText
-
-                LaunchedEffect(displayText) {
-                    scrollState.animateScrollTo(scrollState.maxValue)
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.Bottom
+                // Top Header Bar: History & Settings on Left, Calculator Modes Window on Right
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Mode indicator badge (DEG vs RAD) if in scientific mode
-                    if (currentMode == CalculatorViewModel.CalculatorMode.SCIENTIFIC) {
-                        Text(
-                            text = if (isRadMode) "RAD" else "DEG",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = mutedTextColor,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
+                    // Top Left: History & Settings Buttons
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Surface(
+                            onClick = { showHistorySheet = true },
+                            shape = CircleShape,
+                            color = bgSurfaceColor,
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Default.History,
+                                    contentDescription = "History",
+                                    tint = iconTintColor,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+
+                        Surface(
+                            onClick = { showSettingsSheet = true },
+                            shape = CircleShape,
+                            color = bgSurfaceColor,
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = "Settings",
+                                    tint = iconTintColor,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
                     }
 
-                    // Secondary Live Preview expression if actively calculating
-                    if (formulaText.isNotEmpty() && livePreviewState.isNotEmpty() && livePreviewState != displayText) {
+                    // Top Right: Calculator Modes Professional Window Button
+                    Surface(
+                        onClick = { showModeSheet = true },
+                        shape = CircleShape,
+                        color = bgSurfaceColor,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.Calculate,
+                                contentDescription = "Calculator Modes",
+                                tint = iconTintColor,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+                }
+
+                // Display Area (Multi-line upward expansion into free space)
+                var totalDragX by remember { mutableFloatStateOf(0f) }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .pointerInput(Unit) {
+                            detectHorizontalDragGestures(
+                                onDragStart = { totalDragX = 0f },
+                                onHorizontalDrag = { change, dragAmount ->
+                                    change.consume()
+                                    totalDragX += dragAmount
+                                },
+                                onDragEnd = {
+                                    if (totalDragX < -50f) { // Swipe Left -> Backspace
+                                        viewModel.onBackspace()
+                                    } else if (totalDragX > 50f) { // Swipe Right -> Evaluate
+                                        viewModel.onEvaluate()
+                                    }
+                                }
+                            )
+                        },
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    val scrollState = rememberScrollState()
+                    val formulaText = formulaState
+                    val displayText = if (formulaText.isEmpty()) "0" else formulaText
+
+                    LaunchedEffect(displayText) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(scrollState),
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        // Mode indicator badge (DEG vs RAD) if in scientific mode
+                        if (currentMode == CalculatorViewModel.CalculatorMode.SCIENTIFIC) {
+                            Text(
+                                text = if (isRadMode) "RAD" else "DEG",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = mutedTextColor,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+
+                        // Secondary Live Preview expression if actively calculating
+                        if (formulaText.isNotEmpty() && livePreviewState.isNotEmpty() && livePreviewState != displayText) {
+                            Text(
+                                text = "= $livePreviewState",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = mutedTextColor,
+                                textAlign = TextAlign.End,
+                                maxLines = 5,
+                                softWrap = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                        }
+
+                        // Dynamic Font Sizing & Multi-line wrapping expanding upwards into free space
+                        val fontSizeSp = when {
+                            displayText.length > 30 -> 24.sp
+                            displayText.length > 20 -> 30.sp
+                            displayText.length > 14 -> 38.sp
+                            displayText.length > 9 -> 50.sp
+                            displayText.length > 5 -> 64.sp
+                            else -> 76.sp
+                        }
+
                         Text(
-                            text = "= $livePreviewState",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = mutedTextColor,
+                            text = displayText,
+                            fontSize = fontSizeSp,
+                            fontWeight = FontWeight.Light,
+                            color = displayTextColor,
                             textAlign = TextAlign.End,
-                            maxLines = 5,
+                            lineHeight = fontSizeSp * 1.15f,
+                            maxLines = 10,
                             softWrap = true,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
                     }
-
-                    // Dynamic Font Sizing & Multi-line wrapping expanding upwards into free space
-                    val fontSizeSp = when {
-                        displayText.length > 30 -> 24.sp
-                        displayText.length > 20 -> 30.sp
-                        displayText.length > 14 -> 38.sp
-                        displayText.length > 9 -> 50.sp
-                        displayText.length > 5 -> 64.sp
-                        else -> 76.sp
-                    }
-
-                    Text(
-                        text = displayText,
-                        fontSize = fontSizeSp,
-                        fontWeight = FontWeight.Light,
-                        color = displayTextColor,
-                        textAlign = TextAlign.End,
-                        lineHeight = fontSizeSp * 1.15f,
-                        maxLines = 10,
-                        softWrap = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Calculator Keypad Grid
+                CalculatorGrid(
+                    viewModel = viewModel
+                )
             }
 
-            // Testing AdMob Banner Ad View
-            BannerAdView(modifier = Modifier.padding(vertical = 4.dp))
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Calculator Keypad Grid
-            CalculatorGrid(
-                viewModel = viewModel
+            // Full-Width Edge-to-Edge Testing Banner Ad at the Very Bottom
+            BannerAdView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(if (isDarkTheme) Color.Black else Color(0xFFF2F2F7))
             )
         }
 
