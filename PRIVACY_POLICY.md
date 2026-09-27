@@ -1,6 +1,6 @@
 # Privacy Policy for Kalc Modern
 
-**Effective Date:** February 2026
+**Effective Date:** 2026
 
 **App Name:** Kalc Modern  
 **Package Name:** `com.sk.calculator_aisupported`  

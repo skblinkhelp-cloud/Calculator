@@ -630,7 +630,7 @@ fun PrivacyPolicyDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(vertical = 8.dp)
             ) {
-                Text("Effective Date: February 2026\nDeveloper: SK Software\nContact: sk.blink.help@gmail.com\n", fontSize = 12.sp, color = subTextColor)
+                Text("Effective Date: 2026\nDeveloper: SK Software\nContact: sk.blink.help@gmail.com\n", fontSize = 12.sp, color = subTextColor)
                 Text("1. Zero Data Collection", fontWeight = FontWeight.Bold, color = textColor)
                 Text("Kalc Modern respects your privacy. We do NOT collect, store, or transmit any personal information, location, or usage data.\n", fontSize = 13.sp, color = subTextColor)
 
