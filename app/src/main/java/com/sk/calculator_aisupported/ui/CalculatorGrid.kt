@@ -1,6 +1,7 @@
 package com.sk.calculator_aisupported.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ fun ScientificPillButton(
     containerColor: Color = Color(0xFF252528),
     contentColor: Color = Color.White,
     pressedContainerColor: Color = Color(0xFF424245),
+    border: BorderStroke? = null,
     fontSize: Int = 16,
     fontWeight: FontWeight = FontWeight.Normal,
     onClick: () -> Unit
@@ -46,6 +48,7 @@ fun ScientificPillButton(
         shape = CircleShape,
         color = animatedBg,
         contentColor = contentColor,
+        border = border,
         interactionSource = interactionSource
     ) {
         Box(
@@ -74,6 +77,7 @@ fun IosCalculatorButton(
     contentColor: Color,
     pressedContainerColor: Color,
     pressedContentColor: Color = contentColor,
+    border: BorderStroke? = null,
     isWide: Boolean = false,
     fontSize: Int = 36,
     onClick: () -> Unit
@@ -98,6 +102,7 @@ fun IosCalculatorButton(
         shape = CircleShape,
         color = animatedBg,
         contentColor = animatedFg,
+        border = border,
         interactionSource = interactionSource
     ) {
         Box(
@@ -124,18 +129,20 @@ fun CalculatorGrid(
     val is2ndActive by viewModel.is2ndActive.collectAsState()
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
 
-    // Colors matching Dark Theme vs Light Theme
-    val sciBg = if (isDarkTheme) Color(0xFF1E1E21) else Color(0xFFE5E5EA)
-    val sciPressed = if (isDarkTheme) Color(0xFF38383B) else Color(0xFFD1D1D6)
-    val sciText = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF1C1C1E)
+    // Highly Polished Scientific Theme Palette
+    val sciBg = if (isDarkTheme) Color(0xFF1E1E21) else Color(0xFFFFFFFF)
+    val sciPressed = if (isDarkTheme) Color(0xFF38383B) else Color(0xFFE0E7FF)
+    val sciText = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF4F46E5)
+    val sciBorder = if (!isDarkTheme) BorderStroke(1.dp, Color(0xFFE2E8F0)) else null
 
-    val topOpBg = if (isDarkTheme) Color(0xFF505054) else Color(0xFFD1D1D6)
-    val topOpPressed = if (isDarkTheme) Color(0xFF6E6E73) else Color(0xFFC7C7CC)
-    val topOpText = if (isDarkTheme) Color.White else Color.Black
+    val topOpBg = if (isDarkTheme) Color(0xFF505054) else Color(0xFFE2E8F0)
+    val topOpPressed = if (isDarkTheme) Color(0xFF6E6E73) else Color(0xFFCBD5E1)
+    val topOpText = if (isDarkTheme) Color.White else Color(0xFF0F172A)
 
     val numBg = if (isDarkTheme) Color(0xFF252528) else Color(0xFFFFFFFF)
-    val numPressed = if (isDarkTheme) Color(0xFF424245) else Color(0xFFE5E5EA)
-    val numText = if (isDarkTheme) Color.White else Color.Black
+    val numPressed = if (isDarkTheme) Color(0xFF424245) else Color(0xFFF1F5F9)
+    val numText = if (isDarkTheme) Color.White else Color(0xFF0F172A)
+    val numBorder = if (!isDarkTheme) BorderStroke(1.dp, Color(0xFFCBD5E1)) else null
 
     val accentBg = Color(0xFF635BFF)
     val accentPressed = Color(0xFF817BFF)
@@ -144,13 +151,13 @@ fun CalculatorGrid(
 
     if (mode == CalculatorViewModel.CalculatorMode.BASIC) {
         // Standard Basic Calculator Layout
-        val lightGrayBg = if (isDarkTheme) Color(0xFFA5A5A5) else Color(0xFFD1D1D6)
-        val lightGrayPressed = if (isDarkTheme) Color(0xFFD9D9D9) else Color(0xFFC7C7CC)
-        val lightGrayText = Color(0xFF000000)
+        val lightGrayBg = if (isDarkTheme) Color(0xFFA5A5A5) else Color(0xFFE2E8F0)
+        val lightGrayPressed = if (isDarkTheme) Color(0xFFD9D9D9) else Color(0xFFCBD5E1)
+        val lightGrayText = Color(0xFF0F172A)
 
         val darkGrayBg = if (isDarkTheme) Color(0xFF333333) else Color(0xFFFFFFFF)
-        val darkGrayPressed = if (isDarkTheme) Color(0xFF636366) else Color(0xFFE5E5EA)
-        val darkGrayText = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF000000)
+        val darkGrayPressed = if (isDarkTheme) Color(0xFF636366) else Color(0xFFF1F5F9)
+        val darkGrayText = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF0F172A)
 
         val basicGap = 12.dp
 
@@ -173,13 +180,13 @@ fun CalculatorGrid(
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("7", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("7", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("7")
                 }
-                IosCalculatorButton("8", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("8", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("8")
                 }
-                IosCalculatorButton("9", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("9", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("9")
                 }
                 IosCalculatorButton("×", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
@@ -187,13 +194,13 @@ fun CalculatorGrid(
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("4", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("4", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("4")
                 }
-                IosCalculatorButton("5", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("5", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("5")
                 }
-                IosCalculatorButton("6", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("6", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("6")
                 }
                 IosCalculatorButton("-", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 42) {
@@ -201,13 +208,13 @@ fun CalculatorGrid(
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("1", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("1", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("1")
                 }
-                IosCalculatorButton("2", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("2", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("2")
                 }
-                IosCalculatorButton("3", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed) {
+                IosCalculatorButton("3", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("3")
                 }
                 IosCalculatorButton("+", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
@@ -218,10 +225,10 @@ fun CalculatorGrid(
                 modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(basicGap)
             ) {
-                IosCalculatorButton("0", Modifier.weight(2f), darkGrayBg, darkGrayText, darkGrayPressed, isWide = true, fontSize = 36) {
+                IosCalculatorButton("0", Modifier.weight(2f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, isWide = true, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("0")
                 }
-                IosCalculatorButton(".", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, fontSize = 36) {
+                IosCalculatorButton(".", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(".")
                 }
                 IosCalculatorButton("=", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
@@ -237,22 +244,22 @@ fun CalculatorGrid(
         ) {
             // Row 1: (, ), mc, m+, m-, mr
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("(", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("(", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("(")
                 }
-                ScientificPillButton(")", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton(")", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(")")
                 }
-                ScientificPillButton("mc", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("mc", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onMemoryClear()
                 }
-                ScientificPillButton("m+", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("m+", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onMemoryAdd()
                 }
-                ScientificPillButton("m-", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("m-", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onMemorySubtract()
                 }
-                ScientificPillButton("mr", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("mr", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onMemoryRecall()
                 }
             }
@@ -265,52 +272,54 @@ fun CalculatorGrid(
                     null,
                     if (is2ndActive) accentBg else sciBg,
                     if (is2ndActive) Color.White else sciText,
-                    sciPressed
+                    sciPressed,
+                    border = if (is2ndActive) null else sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.toggle2nd()
                 }
-                ScientificPillButton(if (is2ndActive) "x³" else "x²", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton(if (is2ndActive) "x³" else "x²", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); if (is2ndActive) viewModel.onCube() else viewModel.onSquare()
                 }
-                ScientificPillButton(if (is2ndActive) "yˣ" else "x³", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton(if (is2ndActive) "yˣ" else "x³", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("^")
                 }
-                ScientificPillButton("xʸ", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("xʸ", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("^")
                 }
-                ScientificPillButton("eˣ", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("eˣ", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("e^")
                 }
-                ScientificPillButton("10ˣ", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("10ˣ", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("10^")
                 }
             }
 
             // Row 3: 1/x, ²√x / ³√x, ³√x / ʸ√x, ʸ√x, ln / log₂, log₁₀
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("1/x", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("1/x", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onReciprocal()
                 }
-                ScientificPillButton(if (is2ndActive) "³√x" else "²√x", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton(if (is2ndActive) "³√x" else "²√x", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "³√(" else "√(")
                 }
-                ScientificPillButton(if (is2ndActive) "ʸ√x" else "³√x", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton(if (is2ndActive) "ʸ√x" else "³√x", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) " ʸ√ " else "³√(")
                 }
-                ScientificPillButton("ʸ√x", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("ʸ√x", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(" ʸ√ ")
                 }
-                ScientificPillButton(if (is2ndActive) "log₂" else "ln", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton(if (is2ndActive) "log₂" else "ln", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "log2(" else "ln(")
                 }
-                ScientificPillButton("log₁₀", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("log₁₀", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("log(")
                 }
             }
 
             // Row 4: x!, sin/asin, cos/acos, tan/atan, e, EE
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("x!", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("x!", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onFactorial()
                 }
                 ScientificPillButton(
@@ -319,7 +328,9 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "asin(" else "sin(")
                 }
@@ -329,7 +340,9 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "acos(" else "cos(")
                 }
@@ -339,21 +352,23 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "atan(" else "tan(")
                 }
-                ScientificPillButton("e", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("e", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("e")
                 }
-                ScientificPillButton("EE", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("EE", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("EE")
                 }
             }
 
             // Row 5: Rand, sinh/asinh, cosh/acosh, tanh/atanh, π, Rad/Deg
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("Rand", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("Rand", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onRandom()
                 }
                 ScientificPillButton(
@@ -362,7 +377,9 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "asinh(" else "sinh(")
                 }
@@ -372,7 +389,9 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "acosh(" else "cosh(")
                 }
@@ -382,11 +401,13 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(if (is2ndActive) "atanh(" else "tanh(")
                 }
-                ScientificPillButton("π", Modifier.weight(1f), null, sciBg, sciText, sciPressed) {
+                ScientificPillButton("π", Modifier.weight(1f), null, sciBg, sciText, sciPressed, border = sciBorder, fontWeight = FontWeight.Medium) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("π")
                 }
                 ScientificPillButton(
@@ -395,7 +416,9 @@ fun CalculatorGrid(
                     null,
                     sciBg,
                     sciText,
-                    sciPressed
+                    sciPressed,
+                    border = sciBorder,
+                    fontWeight = FontWeight.Medium
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.toggleRadDeg()
                 }
@@ -427,7 +450,7 @@ fun CalculatorGrid(
                     topOpText,
                     topOpPressed,
                     fontSize = 18,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.SemiBold
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onClear()
                 }
@@ -439,7 +462,7 @@ fun CalculatorGrid(
                     topOpText,
                     topOpPressed,
                     fontSize = 18,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.SemiBold
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onPercentage()
                 }
@@ -451,7 +474,7 @@ fun CalculatorGrid(
                     Color.White,
                     accentPressed,
                     fontSize = 24,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 ) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("÷")
                 }
@@ -459,64 +482,64 @@ fun CalculatorGrid(
 
             // Row 7: 7 (weight 2), 8 (weight 2), 9 (weight 1), × (weight 1)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("7", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("7", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("7")
                 }
-                ScientificPillButton("8", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("8", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("8")
                 }
-                ScientificPillButton("9", Modifier.weight(1f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("9", Modifier.weight(1f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("9")
                 }
-                ScientificPillButton("×", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 22) {
+                ScientificPillButton("×", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 22, fontWeight = FontWeight.Bold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("×")
                 }
             }
 
             // Row 8: 4 (weight 2), 5 (weight 2), 6 (weight 1), - (weight 1)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("4", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("4", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("4")
                 }
-                ScientificPillButton("5", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("5", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("5")
                 }
-                ScientificPillButton("6", Modifier.weight(1f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("6", Modifier.weight(1f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("6")
                 }
-                ScientificPillButton("-", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 24) {
+                ScientificPillButton("-", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 24, fontWeight = FontWeight.Bold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("-")
                 }
             }
 
             // Row 9: 1 (weight 2), 2 (weight 2), 3 (weight 1), + (weight 1)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("1", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("1", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("1")
                 }
-                ScientificPillButton("2", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("2", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("2")
                 }
-                ScientificPillButton("3", Modifier.weight(1f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("3", Modifier.weight(1f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("3")
                 }
-                ScientificPillButton("+", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 22) {
+                ScientificPillButton("+", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 22, fontWeight = FontWeight.Bold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("+")
                 }
             }
 
             // Row 10: +/- (weight 2), 0 (weight 2), . (weight 1), = (weight 1)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                ScientificPillButton("+/-", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("+/-", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onToggleSign()
                 }
-                ScientificPillButton("0", Modifier.weight(2f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton("0", Modifier.weight(2f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("0")
                 }
-                ScientificPillButton(".", Modifier.weight(1f), null, numBg, numText, numPressed, fontSize = 18) {
+                ScientificPillButton(".", Modifier.weight(1f), null, numBg, numText, numPressed, border = numBorder, fontSize = 18, fontWeight = FontWeight.SemiBold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(".")
                 }
-                ScientificPillButton("=", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 22) {
+                ScientificPillButton("=", Modifier.weight(1f), null, accentBg, Color.White, accentPressed, fontSize = 22, fontWeight = FontWeight.Bold) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onEvaluate()
                 }
             }

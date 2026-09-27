@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.google.android.gms.ads.MobileAds
 import com.sk.calculator_aisupported.ui.CalculatorInterface
 import com.sk.calculator_aisupported.ui.CalculatorViewModel
 import com.sk.calculator_aisupported.ui.theme.CalculatorAISupportedTheme
@@ -21,6 +22,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        try {
+            MobileAds.initialize(this) {}
+        } catch (_: Exception) {}
 
         setContent {
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()

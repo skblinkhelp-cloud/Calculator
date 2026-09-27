@@ -23,9 +23,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+
+@Composable
+fun BannerAdView(modifier: Modifier = Modifier) {
+    AndroidView(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        factory = { context ->
+            AdView(context).apply {
+                setAdSize(AdSize.BANNER)
+                // Official Google AdMob Test Banner Ad Unit ID
+                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                loadAd(AdRequest.Builder().build())
+            }
+        }
+    )
+}
 
 @Composable
 fun CalculatorInterface(viewModel: CalculatorViewModel) {
@@ -58,11 +78,11 @@ fun CalculatorInterface(viewModel: CalculatorViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .navigationBarsPadding()
+                .navigationBarsPadding() // Ensures bottom keypad never overlaps Android device bottom bar!
                 .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 12.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Top Header Bar: History & Settings on Left, Calculator Modes Window on Right
+            // Header Bar with Circular Dark Containers
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -211,7 +231,10 @@ fun CalculatorInterface(viewModel: CalculatorViewModel) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            // Testing AdMob Banner Ad View
+            BannerAdView(modifier = Modifier.padding(vertical = 4.dp))
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Calculator Keypad Grid
             CalculatorGrid(

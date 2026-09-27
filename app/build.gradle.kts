@@ -50,6 +50,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("net.objecthunter:exp4j:0.4.8")
 
+    // Google AdMob SDK
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+
     // Jetpack DataStore for secure, atomic offline data saving
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
