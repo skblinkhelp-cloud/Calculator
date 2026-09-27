@@ -71,7 +71,8 @@ fun ScientificPillButton(
 
 @Composable
 fun IosCalculatorButton(
-    text: String,
+    text: String = "",
+    icon: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier,
     containerColor: Color,
     contentColor: Color,
@@ -109,11 +110,15 @@ fun IosCalculatorButton(
             contentAlignment = if (isWide) Alignment.CenterStart else Alignment.Center,
             modifier = if (isWide) Modifier.padding(start = 32.dp) else Modifier
         ) {
-            Text(
-                text = text,
-                fontSize = fontSize.sp,
-                fontWeight = FontWeight.Normal
-            )
+            if (icon != null) {
+                icon()
+            } else {
+                Text(
+                    text = text,
+                    fontSize = fontSize.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            }
         }
     }
 }
@@ -128,8 +133,10 @@ fun CalculatorGrid(
     val isRadMode by viewModel.isRadMode.collectAsState()
     val is2ndActive by viewModel.is2ndActive.collectAsState()
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+    val formulaState by viewModel.formula.collectAsState()
+    val hasFormula = formulaState.isNotEmpty()
 
-    // Highly Polished Scientific Theme Palette
+    // Highly Polished Theme Colors
     val sciBg = if (isDarkTheme) Color(0xFF1E1E21) else Color(0xFFFFFFFF)
     val sciPressed = if (isDarkTheme) Color(0xFF38383B) else Color(0xFFE0E7FF)
     val sciText = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF4F46E5)
@@ -166,58 +173,85 @@ fun CalculatorGrid(
             verticalArrangement = Arrangement.spacedBy(basicGap)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("C", Modifier.weight(1f), lightGrayBg, lightGrayText, lightGrayPressed, fontSize = 32) {
-                    viewModel.triggerHapticFeedback(currentView); viewModel.onClear()
+                // Button 1: All Clear / Clear
+                IosCalculatorButton(
+                    text = if (hasFormula) "AC" else "C",
+                    containerColor = lightGrayBg,
+                    contentColor = lightGrayText,
+                    pressedContainerColor = lightGrayPressed,
+                    fontSize = 30,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    viewModel.triggerHapticFeedback(currentView)
+                    viewModel.onClear()
                 }
-                IosCalculatorButton("+/-", Modifier.weight(1f), lightGrayBg, lightGrayText, lightGrayPressed, fontSize = 28) {
-                    viewModel.triggerHapticFeedback(currentView); viewModel.onToggleSign()
+
+                // Button 2: Cross Delete Button (⌫ / ✕)
+                IosCalculatorButton(
+                    text = "",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Backspace,
+                            contentDescription = "Cross Delete",
+                            tint = lightGrayText,
+                            modifier = Modifier.size(26.dp)
+                        )
+                    },
+                    containerColor = lightGrayBg,
+                    contentColor = lightGrayText,
+                    pressedContainerColor = lightGrayPressed,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    viewModel.triggerHapticFeedback(currentView)
+                    viewModel.onBackspace()
                 }
-                IosCalculatorButton("%", Modifier.weight(1f), lightGrayBg, lightGrayText, lightGrayPressed, fontSize = 30) {
+
+                IosCalculatorButton(text = "%", containerColor = lightGrayBg, contentColor = lightGrayText, pressedContainerColor = lightGrayPressed, fontSize = 30, modifier = Modifier.weight(1f)) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onPercentage()
                 }
-                IosCalculatorButton("÷", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 40) {
+                IosCalculatorButton(text = "÷", containerColor = accentBg, contentColor = Color.White, pressedContainerColor = accentPressed, fontSize = 40, modifier = Modifier.weight(1f)) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("÷")
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("7", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("7", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("7")
                 }
-                IosCalculatorButton("8", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("8", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("8")
                 }
-                IosCalculatorButton("9", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("9", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("9")
                 }
-                IosCalculatorButton("×", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
+                IosCalculatorButton("×", null, Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("×")
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("4", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("4", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("4")
                 }
-                IosCalculatorButton("5", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("5", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("5")
                 }
-                IosCalculatorButton("6", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("6", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("6")
                 }
-                IosCalculatorButton("-", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 42) {
+                IosCalculatorButton("-", null, Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 42) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("-")
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(basicGap)) {
-                IosCalculatorButton("1", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("1", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("1")
                 }
-                IosCalculatorButton("2", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("2", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("2")
                 }
-                IosCalculatorButton("3", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
+                IosCalculatorButton("3", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("3")
                 }
-                IosCalculatorButton("+", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
+                IosCalculatorButton("+", null, Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("+")
                 }
             }
@@ -225,13 +259,16 @@ fun CalculatorGrid(
                 modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(basicGap)
             ) {
-                IosCalculatorButton("0", Modifier.weight(2f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, isWide = true, fontSize = 36) {
+                IosCalculatorButton("+/-", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, fontSize = 28) {
+                    viewModel.triggerHapticFeedback(currentView); viewModel.onToggleSign()
+                }
+                IosCalculatorButton("0", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed("0")
                 }
-                IosCalculatorButton(".", Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, fontSize = 36) {
+                IosCalculatorButton(".", null, Modifier.weight(1f), darkGrayBg, darkGrayText, darkGrayPressed, border = numBorder, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onDigitPressed(".")
                 }
-                IosCalculatorButton("=", Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
+                IosCalculatorButton("=", null, Modifier.weight(1f), accentBg, Color.White, accentPressed, fontSize = 36) {
                     viewModel.triggerHapticFeedback(currentView); viewModel.onEvaluate()
                 }
             }
@@ -424,7 +461,7 @@ fun CalculatorGrid(
                 }
             }
 
-            // Row 6: ⌫ (weight 2), AC (weight 2), % (weight 1), ÷ (weight 1)
+            // Row 6: Cross Delete ⌫ (weight 2), AC (weight 2), % (weight 1), ÷ (weight 1)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap)) {
                 ScientificPillButton(
                     text = "",
@@ -432,7 +469,7 @@ fun CalculatorGrid(
                     icon = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Backspace,
-                            contentDescription = "Backspace",
+                            contentDescription = "Cross Delete",
                             tint = topOpText,
                             modifier = Modifier.size(20.dp)
                         )
