@@ -1,15 +1,17 @@
 # Privacy Policy for Kalc Modern
 
-**Effective Date:** February 22, 2026
+**Effective Date:** February 2026
 
 **App Name:** Kalc Modern  
 **Package Name:** `com.sk.calculator_aisupported`  
-**Developer Contact:** [skblinkhelp-cloud](https://github.com/skblinkhelp-cloud)
+**Developer / Publisher:** SK Software  
+**Contact Email:** sk.blink.help@gmail.com  
+**GitHub Repository:** [https://github.com/skblinkhelp-cloud/Calculator](https://github.com/skblinkhelp-cloud/Calculator)
 
 ---
 
 ### 1. Overview
-Kalc Modern ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how our Android application handles user information.
+Kalc Modern ("we", "our", or "us"), developed by **SK Software**, is committed to protecting your privacy. This Privacy Policy explains how our Android application handles user information in compliance with Google Play Developer Policies.
 
 ---
 
@@ -18,7 +20,7 @@ Kalc Modern ("we", "our", or "us") is committed to protecting your privacy. This
 
 - **No Personal Information:** We do not collect names, email addresses, phone numbers, location data, device IDs, or contact lists.
 - **No Analytics or Tracking:** We do not use third-party analytics SDKs, advertising networks, or user tracking tools.
-- **100% Offline Processing:** All mathematical calculations, scientific evaluations, and unit conversions are performed locally on your device processor. No mathematical data or expression inputs leave your phone.
+- **100% Offline Processing:** All mathematical calculations, scientific evaluations, and unit conversions are computed locally on your device processor. No mathematical data or expression inputs leave your phone.
 
 ---
 
@@ -53,5 +55,7 @@ We may update our Privacy Policy from time to time. Any changes will be posted o
 ---
 
 ### 8. Contact Us
-If you have any questions or suggestions about our Privacy Policy, please contact us via our GitHub Repository:  
-[https://github.com/skblinkhelp-cloud/Calculator](https://github.com/skblinkhelp-cloud/Calculator)
+If you have any questions or suggestions regarding this Privacy Policy or Kalc Modern, please contact us at:  
+- **Email:** [sk.blink.help@gmail.com](mailto:sk.blink.help@gmail.com)  
+- **Developer:** SK Software  
+- **GitHub Repository:** [https://github.com/skblinkhelp-cloud/Calculator](https://github.com/skblinkhelp-cloud/Calculator)

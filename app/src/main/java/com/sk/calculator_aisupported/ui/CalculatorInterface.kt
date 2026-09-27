@@ -630,7 +630,7 @@ fun PrivacyPolicyDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(vertical = 8.dp)
             ) {
-                Text("Last updated: February 2026\n", fontSize = 12.sp, color = subTextColor)
+                Text("Effective Date: February 2026\nDeveloper: SK Software\nContact: sk.blink.help@gmail.com\n", fontSize = 12.sp, color = subTextColor)
                 Text("1. Zero Data Collection", fontWeight = FontWeight.Bold, color = textColor)
                 Text("Kalc Modern respects your privacy. We do NOT collect, store, or transmit any personal information, location, or usage data.\n", fontSize = 13.sp, color = subTextColor)
 
@@ -676,7 +676,7 @@ fun TermsOfServiceDialog(
                     .verticalScroll(rememberScrollState())
                     .padding(vertical = 8.dp)
             ) {
-                Text("Terms & Conditions\n", fontSize = 12.sp, color = subTextColor)
+                Text("Terms & Conditions\nDeveloper: SK Software\nContact: sk.blink.help@gmail.com\n", fontSize = 12.sp, color = subTextColor)
                 Text("1. Use of Service", fontWeight = FontWeight.Bold, color = textColor)
                 Text("Kalc Modern is provided for general calculation purposes. While high precision math algorithms are used, users are encouraged to verify calculations for critical engineering or financial applications.\n", fontSize = 13.sp, color = subTextColor)
 
@@ -716,7 +716,9 @@ fun AboutAppDialog(
         },
         text = {
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                Text("Version 1.0.0 (Build 2026)", fontWeight = FontWeight.Medium, color = textColor)
+                Text("Version 1.0.0 (2026)", fontWeight = FontWeight.Medium, color = textColor)
+                Text("Developer: SK Software", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF635BFF))
+                Text("Support: sk.blink.help@gmail.com", fontSize = 12.sp, color = subTextColor)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("A high-precision scientific calculator app built with Jetpack Compose, Kotlin, and the exp4j math engine.", fontSize = 13.sp, color = subTextColor)
                 Spacer(modifier = Modifier.height(12.dp))
