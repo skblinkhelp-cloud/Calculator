@@ -63,7 +63,7 @@ fun SplashScreen(onTimeout: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Kalc Modern",
+                text = "Calculator",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -737,7 +737,7 @@ fun PrivacyPolicyDialog(
             ) {
                 Text("Effective Date: 2026\nDeveloper: SK Software\nContact: sk.blink.help@gmail.com\n", fontSize = 12.sp, color = subTextColor)
                 Text("1. Zero Data Collection", fontWeight = FontWeight.Bold, color = textColor)
-                Text("Kalc Modern respects your privacy. We do NOT collect, store, or transmit any personal information, location, or usage data.\n", fontSize = 13.sp, color = subTextColor)
+                Text("Calculator respects your privacy. We do NOT collect, store, or transmit any personal information, location, or usage data.\n", fontSize = 13.sp, color = subTextColor)
 
                 Text("2. Local Storage", fontWeight = FontWeight.Bold, color = textColor)
                 Text("Your calculation history and app settings (Theme preference, Haptic toggles, Sound preferences) are saved strictly locally on your device using Jetpack DataStore. No data ever leaves your device.\n", fontSize = 13.sp, color = subTextColor)
@@ -783,7 +783,7 @@ fun TermsOfServiceDialog(
             ) {
                 Text("Terms & Conditions\nDeveloper: SK Software\nContact: sk.blink.help@gmail.com\n", fontSize = 12.sp, color = subTextColor)
                 Text("1. Use of Service", fontWeight = FontWeight.Bold, color = textColor)
-                Text("Kalc Modern is provided for general calculation purposes. While high precision math algorithms are used, users are encouraged to verify calculations for critical engineering or financial applications.\n", fontSize = 13.sp, color = subTextColor)
+                Text("Calculator is provided for general calculation purposes. While high precision math algorithms are used, users are encouraged to verify calculations for critical engineering or financial applications.\n", fontSize = 13.sp, color = subTextColor)
 
                 Text("2. Intellectual Property", fontWeight = FontWeight.Bold, color = textColor)
                 Text("All UI designs, logos, and custom layout matrices are protected under applicable software licenses.", fontSize = 13.sp, color = subTextColor)
@@ -816,7 +816,7 @@ fun AboutAppDialog(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("🧮", fontSize = 24.sp)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Kalc Modern", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = textColor)
+                Text("Calculator", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = textColor)
             }
         },
         text = {

@@ -1,8 +1,8 @@
-# Privacy Policy for Kalc Modern
+# Privacy Policy for Calculator
 
 **Effective Date:** 2026
 
-**App Name:** Kalc Modern  
+**App Name:** Calculator  
 **Package Name:** `com.sk.calculator_aisupported`  
 **Developer / Publisher:** SK Software  
 **Contact Email:** sk.blink.help@gmail.com  
@@ -11,12 +11,12 @@
 ---
 
 ### 1. Overview
-Kalc Modern ("we", "our", or "us"), developed by **SK Software**, is committed to protecting your privacy. This Privacy Policy explains how our Android application handles user information in compliance with Google Play Developer Policies.
+Calculator ("we", "our", or "us"), developed by **SK Software**, is committed to protecting your privacy. This Privacy Policy explains how our Android application handles user information in compliance with Google Play Developer Policies.
 
 ---
 
 ### 2. Information Collection and Use
-**Kalc Modern does NOT collect, store, transmit, or share any personal or sensitive user data.**
+**Calculator does NOT collect, store, transmit, or share any personal or sensitive user data.**
 
 - **No Personal Information:** We do not collect names, email addresses, phone numbers, location data, device IDs, or contact lists.
 - **No Analytics or Tracking:** We do not use third-party analytics SDKs, advertising networks, or user tracking tools.
@@ -35,12 +35,12 @@ The app utilizes local device storage (**Android Jetpack DataStore**) strictly f
 ---
 
 ### 4. Permissions
-Kalc Modern requires **zero sensitive permissions**. The application operates fully offline without requiring internet access, microphone access, camera access, or location access.
+Calculator requires **zero sensitive permissions**. The application operates fully offline without requiring internet access, microphone access, camera access, or location access.
 
 ---
 
 ### 5. Children's Privacy
-Our application is safe for users of all ages, including children under the age of 13. Since we do not collect any personal data, Kalc Modern complies with the Children's Online Privacy Protection Act (COPPA) and Google Play Families Policies.
+Our application is safe for users of all ages, including children under the age of 13. Since we do not collect any personal data, Calculator complies with the Children's Online Privacy Protection Act (COPPA) and Google Play Families Policies.
 
 ---
 
@@ -55,7 +55,7 @@ We may update our Privacy Policy from time to time. Any changes will be posted o
 ---
 
 ### 8. Contact Us
-If you have any questions or suggestions regarding this Privacy Policy or Kalc Modern, please contact us at:  
+If you have any questions or suggestions regarding this Privacy Policy or Calculator, please contact us at:  
 - **Email:** [sk.blink.help@gmail.com](mailto:sk.blink.help@gmail.com)  
 - **Developer:** SK Software  
 - **GitHub Repository:** [https://github.com/skblinkhelp-cloud/Calculator](https://github.com/skblinkhelp-cloud/Calculator)
