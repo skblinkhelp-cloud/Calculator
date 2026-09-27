@@ -1,5 +1,6 @@
 package com.sk.calculator_aisupported.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
@@ -20,20 +21,76 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.sk.calculator_aisupported.R
+import kotlinx.coroutines.delay
+
+@Composable
+fun SplashScreen(onTimeout: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(1500)
+        onTimeout()
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Kalc Modern",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "SK Software",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF635BFF)
+            )
+        }
+    }
+}
 
 @Composable
 fun BannerAdView(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val displayMetrics = context.resources.displayMetrics
+    val widthPixels = displayMetrics.widthPixels
+    val density = displayMetrics.density
+    val adWidth = (widthPixels / density).toInt()
+
+    val adaptiveAdSize = remember(adWidth) {
+        AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -42,9 +99,9 @@ fun BannerAdView(modifier: Modifier = Modifier) {
     ) {
         AndroidView(
             modifier = Modifier.fillMaxWidth(),
-            factory = { context ->
-                AdView(context).apply {
-                    setAdSize(AdSize.BANNER)
+            factory = { ctx ->
+                AdView(ctx).apply {
+                    setAdSize(adaptiveAdSize)
                     // Official Google AdMob Test Banner Ad Unit ID
                     adUnitId = "ca-app-pub-3940256099942544/6300978111"
                     loadAd(AdRequest.Builder().build())
@@ -56,262 +113,268 @@ fun BannerAdView(modifier: Modifier = Modifier) {
 
 @Composable
 fun CalculatorInterface(viewModel: CalculatorViewModel) {
-    val formulaState by viewModel.formula.collectAsState()
-    val livePreviewState by viewModel.livePreview.collectAsState()
-    val currentMode by viewModel.calculatorMode.collectAsState()
-    val isRadMode by viewModel.isRadMode.collectAsState()
-    val isDarkTheme by viewModel.isDarkTheme.collectAsState()
-    val isHapticEnabled by viewModel.isHapticEnabled.collectAsState()
-    val isSoundEnabled by viewModel.isSoundEnabled.collectAsState()
+    var showSplashScreen by remember { mutableStateOf(true) }
 
-    var showHistorySheet by remember { mutableStateOf(false) }
-    var showSettingsSheet by remember { mutableStateOf(false) }
-    var showModeSheet by remember { mutableStateOf(false) }
+    if (showSplashScreen) {
+        SplashScreen(onTimeout = { showSplashScreen = false })
+    } else {
+        val formulaState by viewModel.formula.collectAsState()
+        val livePreviewState by viewModel.livePreview.collectAsState()
+        val currentMode by viewModel.calculatorMode.collectAsState()
+        val isRadMode by viewModel.isRadMode.collectAsState()
+        val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+        val isHapticEnabled by viewModel.isHapticEnabled.collectAsState()
+        val isSoundEnabled by viewModel.isSoundEnabled.collectAsState()
 
-    var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
-    var showTermsDialog by remember { mutableStateOf(false) }
-    var showAboutDialog by remember { mutableStateOf(false) }
+        var showHistorySheet by remember { mutableStateOf(false) }
+        var showSettingsSheet by remember { mutableStateOf(false) }
+        var showModeSheet by remember { mutableStateOf(false) }
 
-    val bgSurfaceColor = if (isDarkTheme) Color(0xFF2C2C2E) else Color(0xFFE5E5EA)
-    val iconTintColor = if (isDarkTheme) Color.White else Color(0xFF1C1C1E)
-    val displayTextColor = if (isDarkTheme) Color.White else Color(0xFF000000)
-    val mutedTextColor = if (isDarkTheme) Color(0xFF8E8E93) else Color(0xFF6C6C70)
+        var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
+        var showTermsDialog by remember { mutableStateOf(false) }
+        var showAboutDialog by remember { mutableStateOf(false) }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = if (isDarkTheme) Color.Black else Color(0xFFF2F2F7)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding(), // Ensures bottom banner sits cleanly above device navigation bar
-            verticalArrangement = Arrangement.SpaceBetween
+        val bgSurfaceColor = if (isDarkTheme) Color(0xFF2C2C2E) else Color(0xFFE5E5EA)
+        val iconTintColor = if (isDarkTheme) Color.White else Color(0xFF1C1C1E)
+        val displayTextColor = if (isDarkTheme) Color.White else Color(0xFF000000)
+        val mutedTextColor = if (isDarkTheme) Color(0xFF8E8E93) else Color(0xFF6C6C70)
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = if (isDarkTheme) Color.Black else Color(0xFFF2F2F7)
         ) {
-            // Main Top & Middle Content (Header, Display & Keypad)
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Top Header Bar: History & Settings on Left, Calculator Modes Window on Right
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Top Left: History & Settings Buttons
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Surface(
-                            onClick = { showHistorySheet = true },
-                            shape = CircleShape,
-                            color = bgSurfaceColor,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.History,
-                                    contentDescription = "History",
-                                    tint = iconTintColor,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
-
-                        Surface(
-                            onClick = { showSettingsSheet = true },
-                            shape = CircleShape,
-                            color = bgSurfaceColor,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.Settings,
-                                    contentDescription = "Settings",
-                                    tint = iconTintColor,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
-                    }
-
-                    // Top Right: Calculator Modes Professional Window Button
-                    Surface(
-                        onClick = { showModeSheet = true },
-                        shape = CircleShape,
-                        color = bgSurfaceColor,
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Default.Calculate,
-                                contentDescription = "Calculator Modes",
-                                tint = iconTintColor,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-                }
-
-                // Display Area (Multi-line upward expansion into free space)
-                var totalDragX by remember { mutableFloatStateOf(0f) }
-
-                Box(
+                // Main Top & Middle Content (Header, Display & Keypad)
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .pointerInput(Unit) {
-                            detectHorizontalDragGestures(
-                                onDragStart = { totalDragX = 0f },
-                                onHorizontalDrag = { change, dragAmount ->
-                                    change.consume()
-                                    totalDragX += dragAmount
-                                },
-                                onDragEnd = {
-                                    if (totalDragX < -50f) { // Swipe Left -> Backspace
-                                        viewModel.onBackspace()
-                                    } else if (totalDragX > 50f) { // Swipe Right -> Evaluate
-                                        viewModel.onEvaluate()
-                                    }
-                                }
-                            )
-                        },
-                    contentAlignment = Alignment.BottomEnd
+                        .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    val scrollState = rememberScrollState()
-                    val formulaText = formulaState
-                    val displayText = if (formulaText.isEmpty()) "0" else formulaText
-
-                    LaunchedEffect(displayText) {
-                        scrollState.animateScrollTo(scrollState.maxValue)
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(scrollState),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.Bottom
+                    // Top Header Bar: History & Settings on Left, Calculator Modes Window on Right
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Mode indicator badge (DEG vs RAD) if in scientific mode
-                        if (currentMode == CalculatorViewModel.CalculatorMode.SCIENTIFIC) {
-                            Text(
-                                text = if (isRadMode) "RAD" else "DEG",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = mutedTextColor,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                        // Top Left: History & Settings Buttons
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Surface(
+                                onClick = { showHistorySheet = true },
+                                shape = CircleShape,
+                                color = bgSurfaceColor,
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.History,
+                                        contentDescription = "History",
+                                        tint = iconTintColor,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+
+                            Surface(
+                                onClick = { showSettingsSheet = true },
+                                shape = CircleShape,
+                                color = bgSurfaceColor,
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.Settings,
+                                        contentDescription = "Settings",
+                                        tint = iconTintColor,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
                         }
 
-                        // Secondary Live Preview expression if actively calculating
-                        if (formulaText.isNotEmpty() && livePreviewState.isNotEmpty() && livePreviewState != displayText) {
+                        // Top Right: Calculator Modes Professional Window Button
+                        Surface(
+                            onClick = { showModeSheet = true },
+                            shape = CircleShape,
+                            color = bgSurfaceColor,
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Default.Calculate,
+                                    contentDescription = "Calculator Modes",
+                                    tint = iconTintColor,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    // Display Area (Multi-line upward expansion into free space)
+                    var totalDragX by remember { mutableFloatStateOf(0f) }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .pointerInput(Unit) {
+                                detectHorizontalDragGestures(
+                                    onDragStart = { totalDragX = 0f },
+                                    onHorizontalDrag = { change, dragAmount ->
+                                        change.consume()
+                                        totalDragX += dragAmount
+                                    },
+                                    onDragEnd = {
+                                        if (totalDragX < -50f) { // Swipe Left -> Backspace
+                                            viewModel.onBackspace()
+                                        } else if (totalDragX > 50f) { // Swipe Right -> Evaluate
+                                            viewModel.onEvaluate()
+                                        }
+                                    }
+                                )
+                            },
+                        contentAlignment = Alignment.BottomEnd
+                    ) {
+                        val scrollState = rememberScrollState()
+                        val formulaText = formulaState
+                        val displayText = if (formulaText.isEmpty()) "0" else formulaText
+
+                        LaunchedEffect(displayText) {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(scrollState),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            // Mode indicator badge (DEG vs RAD) if in scientific mode
+                            if (currentMode == CalculatorViewModel.CalculatorMode.SCIENTIFIC) {
+                                Text(
+                                    text = if (isRadMode) "RAD" else "DEG",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = mutedTextColor,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                            }
+
+                            // Secondary Live Preview expression if actively calculating
+                            if (formulaText.isNotEmpty() && livePreviewState.isNotEmpty() && livePreviewState != displayText) {
+                                Text(
+                                    text = "= $livePreviewState",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = mutedTextColor,
+                                    textAlign = TextAlign.End,
+                                    maxLines = 5,
+                                    softWrap = true,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                            }
+
+                            // Dynamic Font Sizing & Multi-line wrapping expanding upwards into free space
+                            val fontSizeSp = when {
+                                displayText.length > 30 -> 24.sp
+                                displayText.length > 20 -> 30.sp
+                                displayText.length > 14 -> 38.sp
+                                displayText.length > 9 -> 50.sp
+                                displayText.length > 5 -> 64.sp
+                                else -> 76.sp
+                            }
+
                             Text(
-                                text = "= $livePreviewState",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = mutedTextColor,
+                                text = displayText,
+                                fontSize = fontSizeSp,
+                                fontWeight = FontWeight.Light,
+                                color = displayTextColor,
                                 textAlign = TextAlign.End,
-                                maxLines = 5,
+                                lineHeight = fontSizeSp * 1.15f,
+                                maxLines = 10,
                                 softWrap = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
                         }
-
-                        // Dynamic Font Sizing & Multi-line wrapping expanding upwards into free space
-                        val fontSizeSp = when {
-                            displayText.length > 30 -> 24.sp
-                            displayText.length > 20 -> 30.sp
-                            displayText.length > 14 -> 38.sp
-                            displayText.length > 9 -> 50.sp
-                            displayText.length > 5 -> 64.sp
-                            else -> 76.sp
-                        }
-
-                        Text(
-                            text = displayText,
-                            fontSize = fontSizeSp,
-                            fontWeight = FontWeight.Light,
-                            color = displayTextColor,
-                            textAlign = TextAlign.End,
-                            lineHeight = fontSizeSp * 1.15f,
-                            maxLines = 10,
-                            softWrap = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Calculator Keypad Grid
+                    CalculatorGrid(
+                        viewModel = viewModel
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Calculator Keypad Grid
-                CalculatorGrid(
-                    viewModel = viewModel
+                // Full-Width Adaptive Banner Ad at the Very Bottom
+                BannerAdView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(if (isDarkTheme) Color.Black else Color(0xFFF2F2F7))
                 )
             }
 
-            // Full-Width Edge-to-Edge Testing Banner Ad at the Very Bottom
-            BannerAdView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(if (isDarkTheme) Color.Black else Color(0xFFF2F2F7))
-            )
-        }
+            if (showHistorySheet) {
+                HistorySheet(
+                    viewModel = viewModel,
+                    onDismiss = { showHistorySheet = false }
+                )
+            }
 
-        if (showHistorySheet) {
-            HistorySheet(
-                viewModel = viewModel,
-                onDismiss = { showHistorySheet = false }
-            )
-        }
+            if (showModeSheet) {
+                CalculatorModeSheet(
+                    currentMode = currentMode,
+                    isDarkTheme = isDarkTheme,
+                    onSelectMode = { mode ->
+                        viewModel.setCalculatorMode(mode)
+                        showModeSheet = false
+                    },
+                    onDismiss = { showModeSheet = false }
+                )
+            }
 
-        if (showModeSheet) {
-            CalculatorModeSheet(
-                currentMode = currentMode,
-                isDarkTheme = isDarkTheme,
-                onSelectMode = { mode ->
-                    viewModel.setCalculatorMode(mode)
-                    showModeSheet = false
-                },
-                onDismiss = { showModeSheet = false }
-            )
-        }
+            if (showSettingsSheet) {
+                SettingsSheet(
+                    viewModel = viewModel,
+                    isDarkTheme = isDarkTheme,
+                    isHapticEnabled = isHapticEnabled,
+                    isSoundEnabled = isSoundEnabled,
+                    onOpenPrivacyPolicy = { showPrivacyPolicyDialog = true },
+                    onOpenTerms = { showTermsDialog = true },
+                    onOpenAbout = { showAboutDialog = true },
+                    onDismiss = { showSettingsSheet = false }
+                )
+            }
 
-        if (showSettingsSheet) {
-            SettingsSheet(
-                viewModel = viewModel,
-                isDarkTheme = isDarkTheme,
-                isHapticEnabled = isHapticEnabled,
-                isSoundEnabled = isSoundEnabled,
-                onOpenPrivacyPolicy = { showPrivacyPolicyDialog = true },
-                onOpenTerms = { showTermsDialog = true },
-                onOpenAbout = { showAboutDialog = true },
-                onDismiss = { showSettingsSheet = false }
-            )
-        }
+            if (showPrivacyPolicyDialog) {
+                PrivacyPolicyDialog(
+                    isDarkTheme = isDarkTheme,
+                    onDismiss = { showPrivacyPolicyDialog = false }
+                )
+            }
 
-        if (showPrivacyPolicyDialog) {
-            PrivacyPolicyDialog(
-                isDarkTheme = isDarkTheme,
-                onDismiss = { showPrivacyPolicyDialog = false }
-            )
-        }
+            if (showTermsDialog) {
+                TermsOfServiceDialog(
+                    isDarkTheme = isDarkTheme,
+                    onDismiss = { showTermsDialog = false }
+                )
+            }
 
-        if (showTermsDialog) {
-            TermsOfServiceDialog(
-                isDarkTheme = isDarkTheme,
-                onDismiss = { showTermsDialog = false }
-            )
-        }
-
-        if (showAboutDialog) {
-            AboutAppDialog(
-                isDarkTheme = isDarkTheme,
-                onDismiss = { showAboutDialog = false }
-            )
+            if (showAboutDialog) {
+                AboutAppDialog(
+                    isDarkTheme = isDarkTheme,
+                    onDismiss = { showAboutDialog = false }
+                )
+            }
         }
     }
 }
